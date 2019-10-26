@@ -26,6 +26,8 @@ code.pop();
 code = code.join("");
 console.log(code);
 
+document.getElementById("url").innerHTML = "http://192.168.1.155:3000/join?game=" + code;
+
 var game = false;
 
 var socket = io.connect('http://192.168.1.155:3000');

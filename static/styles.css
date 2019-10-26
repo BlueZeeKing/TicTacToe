@@ -110,3 +110,13 @@ html, body {
 .code {
     margin-bottom: 10px;
 }
+
+#url {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+    font-family: 'Lexend Deca', sans-serif;
+    font-size: 13px;
+    color: rgb(114, 114, 114);
+}

@@ -1,15 +1,14 @@
 const express = require('express')
 const app = express()
-const bodyParser = require('body-parser')
 var session = require('client-sessions');
 var favicon = require('serve-favicon');
+
 
 var gameCodes = [];
 var games = {};
 
 app.set('view engine', 'ejs')
 app.use(express.static('static'))
-app.use(bodyParser.urlencoded({ extended: true}))
 app.use(session({
     cookieName: 'session',
     secret: 'yeeeeeeeeeeeeetimus-maaaaaaaaaaximus',
@@ -22,21 +21,21 @@ app.get('/', function (req, res) {
     res.render('index')
 })
 
-app.post("/join", function (req, res) {
-    req.session.key = req.body.main + Math.floor(Math.random() * 100)
-    if (req.body.main in games || games[req.body.main] != undefined) {
+app.get("/join", function (req, res) {
+    req.session.key = req.query.game + Math.floor(Math.random() * 100)
+    if (req.query.game in games || games[req.query.game] != undefined) {
         //console.log(games[req.body.main]["players"])
         try {
-            if (games[req.body.main]["players"] == 2) {
+            if (games[req.query.game]["players"] == 2) {
                 res.redirect("/")
             } else {
-                games[req.body.main]["players"]++
+                games[req.query.game]["players"]++
                 res.redirect('/online')
             }
         } catch {
-            var code = req.body.main
+            var code = req.query.game
             games[code] = {
-                "code": req.body.main, "board": [
+                "code": req.query.game, "board": [
                     ["n", "n", "n"],
                     ["n", "n", "n"],
                     ["n", "n", "n"]
@@ -46,9 +45,9 @@ app.post("/join", function (req, res) {
             res.redirect('/online')
         }
     } else {
-        var code = req.body.main
+        var code = req.query.game
         games[code] = {
-                "code": req.body.main, "board": [
+                "code": req.query.game, "board": [
                     ["n", "n", "n"],
                     ["n", "n", "n"],
                     ["n", "n", "n"]

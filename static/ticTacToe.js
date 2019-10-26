@@ -18,7 +18,7 @@ board.lineWidth = 5;
 
 var me;
 
-var code = httpGet("https://hard-cow-70.localtunnel.me/code");
+var code = httpGet("http://192.168.1.155:3000/code");
 code = code.toString();
 code = code.split("");
 code.pop();
@@ -28,7 +28,7 @@ console.log(code);
 
 var game = false;
 
-var socket = io.connect('https://hard-cow-70.localtunnel.me');
+var socket = io.connect('http://192.168.1.155:3000');
 
 socket.emit("here", code);
 

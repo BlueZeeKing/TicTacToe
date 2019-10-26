@@ -2,6 +2,7 @@ const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
 var session = require('client-sessions');
+var favicon = require('serve-favicon');
 
 var gameCodes = [];
 var games = {};
@@ -15,6 +16,7 @@ app.use(session({
     duration: 30 * 60 * 1000,
     activeDuration: 8 * 60 * 1000,
 }));
+app.use(favicon(__dirname + '/static/favicon.ico'));
 
 app.get('/', function (req, res) {
     res.render('index')
@@ -22,9 +24,27 @@ app.get('/', function (req, res) {
 
 app.post("/join", function (req, res) {
     req.session.key = req.body.main + Math.floor(Math.random() * 100)
-    console.log('yeet' == req.body.main)
-    if (req.body.main in games) {
-        
+    if (req.body.main in games || games[req.body.main] != undefined) {
+        //console.log(games[req.body.main]["players"])
+        try {
+            if (games[req.body.main]["players"] == 2) {
+                res.redirect("/")
+            } else {
+                games[req.body.main]["players"]++
+                res.redirect('/online')
+            }
+        } catch {
+            var code = req.body.main
+            games[code] = {
+                "code": req.body.main, "board": [
+                    ["n", "n", "n"],
+                    ["n", "n", "n"],
+                    ["n", "n", "n"]
+                ], "winX": 0, "winO": 0, "next": "o", "full": false, "nextChar": "x", "turn": "x", "alertX": "X's turn", "alertO": "X's turn", "w": false, "winLine": false, "players": 1
+            }
+            gameCodes.push(code)
+            res.redirect('/online')
+        }
     } else {
         var code = req.body.main
         games[code] = {
@@ -32,12 +52,12 @@ app.post("/join", function (req, res) {
                     ["n", "n", "n"],
                     ["n", "n", "n"],
                     ["n", "n", "n"]
-            ], "winX": 0, "winO": 0, "next": "o", "full": false, "nextChar": "x", "turn": "x", "alertX": "X's turn", "alertO": "X's turn", "w": false, "winLine": false
+            ], "winX": 0, "winO": 0, "next": "o", "full": false, "nextChar": "x", "turn": "x", "alertX": "X's turn", "alertO": "X's turn", "w": false, "winLine": false, "players": 1
             }
-        console.log("new")
+        gameCodes.push(code)
+        res.redirect('/online')
     }
-    //console.log(req.body.main)
-    res.redirect('/online')
+        ////console.log(req.body.main)
 })
 
 app.get("/online", function (req, res) {
@@ -55,26 +75,36 @@ app.get("/code", function (req, res) {
 })
 
 server = app.listen(3000, function () {
-    //console.log('Example app listening on port 3000!')
+    ////console.log('Example app listening on port 3000!')
 })
 
 const io = require("socket.io")(server)
 
 io.on('connection', (socket) => {
-    //console.log('New connection')
+    ////console.log('New connection')
     
     socket.on('here', (data) => {
-        console.log(games)
-        console.log(data)
-        socket.emit(data, games[data])
-        if (games[data]["nextChar"] == "x") {
-            games[data]["nextChar"] = "o";
+        //console.log(games)
+        //console.log(data)
+        try {
+            socket.emit(data, games[data])
+            if (games[data]["nextChar"] == "x") {
+                games[data]["nextChar"] = "o";
+            }
+            if (gameCodes.length >= 10) {
+                games[gameCodes[0]] = undefined
+                gameCodes.shift();
+            }
+        } catch {
+            console.log("error")
         }
+        console.log(gameCodes)
+        console.log(games)
     })
     socket.on('clicked', (data) => {
         if (games[data[0]]["w"] == false) {
             if (games[data[0]]["turn"] == data[1]) {
-                console.log(data)
+                //console.log(data)
                 if (games[data[0]]["board"][data[3] - 1][data[2] - 1] == "n") {
                     if (data[1] == "x") {
                         games[data[0]]["turn"] = "o"
@@ -240,12 +270,19 @@ io.on('connection', (socket) => {
 
         } else {
             io.sockets.emit("clear", data[0])
+            if (games[data[0]]["next"] == 'x') {
+                var nextTemp = "o"
+                var alertTemp = "X's Turn"
+            } else {
+                var nextTemp = "x"
+                var alertTemp = "O's Turn"
+            }
             games[data[0]] = {
                 "code": data[0], "board": [
                     ["n", "n", "n"],
                     ["n", "n", "n"],
                     ["n", "n", "n"]
-                ], "winX": games[data[0]]["winX"], "winO": games[data[0]]["winO"], "next": "o", "full": false, "nextChar": "x", "turn": "x", "alertX": "X's turn", "alertO": "X's turn", "w": false, "winLine": false
+                ], "winX": games[data[0]]["winX"], "winO": games[data[0]]["winO"], "next": nextTemp, "full": false, "nextChar": "x", "turn": games[data[0]]["next"], "alertX": alertTemp, "alertO": alertTemp, "w": false, "winLine": false, "players": 2
             }
         }
 

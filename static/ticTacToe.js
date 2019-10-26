@@ -261,33 +261,35 @@ socket.on("clear", (data) => {
 })
 
 socket.on("update", (data) => {
-    console.log("update");
-    game = data;
-    if (me == "x") {
-        alertShow(game["alertX"]); 
-    } else {
-        alertShow(game["alertO"]); 
-    }
-    scoreShow(game["winX"], game["winO"])
-    for (let i = 0; i < 3; i++) {
-        console.log("layer one")
-        for (let v = 0; v < 3; v++) {
-            if (game["board"][i][v] == "x") {
-                X(v + 1, i + 1)
-            } else if (game["board"][i][v] == "o") {
-                O(v + 1, i + 1)
-            }
-            console.log("layer two")
+    if (data["code"] == code) {
+        console.log("update");
+        game = data;
+        if (me == "x") {
+            alertShow(game["alertX"]); 
+        } else {
+            alertShow(game["alertO"]); 
         }
-        console.log(i);
-    }
-    if (game["winLine"] != false) {
-        if (game["winLine"][0] == "h") {
-            lineH(game["winLine"][2], game["winLine"][1]);
-        } else if (game["winLine"][0] == "v") {
-            lineV(game["winLine"][2], game["winLine"][1]);
-        } else if (game["winLine"][0] == "d") {
-            lineD(game["winLine"][2], game["winLine"][1]);
+        scoreShow(game["winX"], game["winO"])
+        for (let i = 0; i < 3; i++) {
+            console.log("layer one")
+            for (let v = 0; v < 3; v++) {
+                if (game["board"][i][v] == "x") {
+                    X(v + 1, i + 1)
+                } else if (game["board"][i][v] == "o") {
+                    O(v + 1, i + 1)
+                }
+                console.log("layer two")
+            }
+            console.log(i);
+        }
+        if (game["winLine"] != false) {
+            if (game["winLine"][0] == "h") {
+                lineH(game["winLine"][2], game["winLine"][1]);
+            } else if (game["winLine"][0] == "v") {
+                lineV(game["winLine"][2], game["winLine"][1]);
+            } else if (game["winLine"][0] == "d") {
+                lineD(game["winLine"][2], game["winLine"][1]);
+            }
         }
     }
 })

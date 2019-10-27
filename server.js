@@ -81,7 +81,7 @@ app.get("/code", function (req, res) {
     }
 })
 
-server = app.listen(3000, function () {
+server = app.listen(3000, "0.0.0.0", function () {
     ////console.log('Example app listening on port 3000!')
 })
 

@@ -1,7 +1,6 @@
 const express = require('express')
 const app = express()
 var session = require('client-sessions');
-var favicon = require('serve-favicon');
 
 
 var gameCodes = [];
@@ -15,7 +14,6 @@ app.use(session({
     duration: 30 * 60 * 1000,
     activeDuration: 8 * 60 * 1000,
 }));
-app.use(favicon(__dirname + '/static/favicon.ico'));
 
 app.get('/form', function (req, res) {
     res.render('form')

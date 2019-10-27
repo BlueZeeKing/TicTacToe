@@ -17,8 +17,16 @@ app.use(session({
 }));
 app.use(favicon(__dirname + '/static/favicon.ico'));
 
-app.get('/', function (req, res) {
-    res.render('index')
+app.get('/form', function (req, res) {
+    res.render('form')
+})
+
+app.get("/", function (req, res) {
+    res.render("index")
+})
+
+app.get("/offline", function (req, res) {
+    res.render("offline")
 })
 
 app.get("/join", function (req, res) {

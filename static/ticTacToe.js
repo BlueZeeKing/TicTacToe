@@ -5,6 +5,8 @@ function httpGet(theUrl) {
     return xmlHttp.responseText;
 }
 
+var url = "192.168.1.155:3000";
+
 var canvasObj = document.getElementById("board");
 var board = canvasObj.getContext("2d");
 
@@ -18,7 +20,7 @@ board.lineWidth = 5;
 
 var me;
 
-var code = httpGet("http://192.168.1.155:3000/code");
+var code = httpGet("http://"+url+"/code");
 code = code.toString();
 code = code.split("");
 code.pop();
@@ -26,11 +28,11 @@ code.pop();
 code = code.join("");
 console.log(code);
 
-document.getElementById("url").innerHTML = "http://192.168.1.155:3000/join?game=" + code;
+document.getElementById("url").innerHTML = "http://" + url + "/join?game=" + code;
 
 var game = false;
 
-var socket = io.connect('http://192.168.1.155:3000');
+var socket = io.connect('http://'+url);
 
 socket.emit("here", code);
 

@@ -2,6 +2,8 @@ const express = require('express')
 const app = express()
 var session = require('client-sessions');
 
+var serverURL = "0.0.0.0"
+var port = 3000
 
 var gameCodes = [];
 var games = {};
@@ -79,8 +81,8 @@ app.get("/code", function (req, res) {
     }
 })
 
-server = app.listen(3000, "0.0.0.0", function () {
-    ////console.log('Example app listening on port 3000!')
+server = app.listen(port, serverURL, function () {
+    console.log('Example app listening on port '+port+'!')
 })
 
 const io = require("socket.io")(server)

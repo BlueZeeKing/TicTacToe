@@ -1,8 +1,22 @@
 # Online Tic Tac Toe
 
-This is a project that I worked on during summer vacation to pass the time and sharpen my skills. As you can see i am a beginner. It has an Offline mode where two people play on one device, and online mode where they can play on any two devices where they can access github. unfortunately just the US.
+This is a project to play tic tac toe with people from any mobile device. it has an online mode that can be used with any two mobile devices (if the screen just shows a square try again with a diffrent code). then there is an offline mode that can just be used on one device.
+
+You can visit the wesite [here](http://206.81.13.42/)
 
 ---
 
+### Running the code
 
-You can visit the wesite [here](http://192.168.1.155:3000/)
+First use a terminal or command prompt and navigate to the directory of the project. Then use `npm install` to install the packages. Then go into the server.js file and at line 5 and 6 change the port and adress to whatever you want. This is the default:
+```javascript
+var serverURL = "0.0.0.0"
+var port = 3000
+```
+Then in static/ticTacToe.js change the line:
+```javascript
+var url = "192.168.1.155:3000";
+``` 
+at line eight to your network ip address. (will usually start with 192.168.1.some three digit number)
+then run `node server.js` and go to your ip address. 
+##### This can also be run using 127.0.0.1 for any computer but will not be available to other computers on the network like the code above!
